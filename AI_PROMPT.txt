@@ -1,0 +1,36 @@
+I have a SaaS codebase that is a "Template". I need you to transform it into a specific Product.
+
+**MY PRODUCT IDEA:**
+[INSERT_YOUR_BUSINESS_IDEA_HERE]
+(Example: "A Resume Optimizer that takes a PDF and job description, then rewrites the resume to match.")
+
+---
+
+**YOUR INSTRUCTIONS (Follow Strictly):**
+
+1.  **Analyze the Codebase:**
+    *   Read `AI_INSTRUCTIONS.md` first. It tells you what is safe to touch.
+    *   Read `lib/ai/run-tool.ts`. This is the "Brain".
+    *   Read `app/page.tsx`. This is the "Skin".
+
+2.  **Phase 1: The Brain (`lib/ai/run-tool.ts`)**
+    *   Modify `TOOL_REGISTRY`. Rename the default tool to something relevant (e.g., `optimize_resume`).
+    *   Write a **detailed system prompt** for the AI. Be creative. Use my product idea logic.
+    *   Update the `schema` using Zod to match the inputs my product needs (e.g., `resumeText`, `jobDescription`).
+
+3.  **Phase 2: The Skin (`app/page.tsx` & `app/dashboard/page.tsx`)**
+    *   My product is "Premium". Use the design guidelines in `AI_INSTRUCTIONS.md`.
+    *   Update the Landing Page copy to sell MY product, not the template.
+    *   Update the Dashboard to have a form that accepts the inputs you defined in Phase 1.
+
+4.  **Phase 3: Safety Check (CRITICAL)**
+    *   **DO NOT** modify `lib/auth`, `lib/billing`, or `middleware.ts`.
+    *   **DO NOT** remove the rate limits or the subscription checks in `runAITool`.
+    *   **DO NOT** hardcode any API keys.
+
+5.  **Output:**
+    *   Show me the code changes for `lib/ai/run-tool.ts`.
+    *   Show me the code changes for `app/page.tsx`.
+    *   Show me the code changes for `app/dashboard/page.tsx`.
+
+**GO.**
