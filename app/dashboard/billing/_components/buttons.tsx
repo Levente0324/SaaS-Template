@@ -17,7 +17,10 @@ export function ManageSubscriptionButton({ isPro }: { isPro: boolean }) {
       const data = await res.json();
 
       if (data.url) {
-        window.location.href = data.url;
+        window.location.assign(data.url);
+        // Clear the loading state after 3 seconds in case the browser
+        // forced it into a new tab (like IDE viewers do)
+        setTimeout(() => setLoading(false), 3000);
       } else {
         alert(data.error || "An error occurred");
         setLoading(false);

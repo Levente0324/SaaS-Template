@@ -18,6 +18,8 @@ import { safeErrorResponse } from "@/lib/errors";
 import { logBillingEvent, logError } from "@/lib/logging";
 import { env } from "@/lib/env";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   try {
     // 1. Require authenticated user
@@ -47,6 +49,7 @@ export async function POST(request: NextRequest) {
     );
 
     const appUrl = env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    const cleanAppUrl = appUrl.endsWith("/") ? appUrl.slice(0, -1) : appUrl;
 
     // 4. Create Checkout Session
     const session = await stripe.checkout.sessions.create(
@@ -54,8 +57,8 @@ export async function POST(request: NextRequest) {
         customer: customerId,
         mode: "subscription",
         line_items: [{ price: priceId, quantity: 1 }],
-        success_url: `${appUrl}/dashboard/billing?status=success`,
-        cancel_url: `${appUrl}/dashboard/billing?status=canceled`,
+        success_url: `${cleanAppUrl}/dashboard/billing?status=success`,
+        cancel_url: `${cleanAppUrl}/dashboard/billing?status=canceled`,
         metadata: { userId: user.id }, // Mirror in invoice for webhook use
         subscription_data: {
           metadata: { userId: user.id },

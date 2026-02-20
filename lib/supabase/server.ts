@@ -4,7 +4,10 @@
  * Uses cookies() from next/headers to maintain session state.
  * SECURITY: This file may use SUPABASE_SERVICE_ROLE_KEY — server only.
  */
-import { type SupabaseClient } from "@supabase/supabase-js";
+import {
+  type SupabaseClient,
+  createClient as createSupabaseClient,
+} from "@supabase/supabase-js";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
@@ -44,35 +47,18 @@ export async function createClient(): Promise<SupabaseClient> {
 /**
  * Admin client using the service role key.
  * ONLY use server-side for webhook handlers and privileged operations.
- * NEVER expose this to the client.
+ * NEVER expose this to the client. Uses pure supabase-js to prevent
+ * cookie-based JWTs from downgrading the service_role permissions.
  */
 export async function createAdminClient(): Promise<SupabaseClient> {
-  const cookieStore = await cookies();
-
-  return createServerClient(
+  return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(
-          cookiesToSet: {
-            name: string;
-            value: string;
-            options?: CookieOptions;
-          }[],
-        ) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options),
-            );
-          } catch {
-            // ignore in Server Components
-          }
-        },
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
       },
     },
-  ) as SupabaseClient;
+  );
 }

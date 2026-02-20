@@ -19,6 +19,8 @@ import {
 import { logBillingEvent, logError } from "@/lib/logging";
 import { Errors, safeErrorResponse } from "@/lib/errors";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   const body = await request.text();
   const signature = headers().get("Stripe-Signature") as string;
@@ -70,7 +72,7 @@ export async function POST(request: Request) {
             subscription.id,
             subscription.status,
             subscription.current_period_end,
-            undefined, // Price ID inferred from status for now, or fetch if needed
+            subscription.items.data[0]?.price.id,
           );
         }
         break;
@@ -87,7 +89,7 @@ export async function POST(request: Request) {
           subscription.id,
           subscription.status,
           subscription.current_period_end,
-          subscription.items.data[0]?.price.id,
+          subscription.items?.data?.[0]?.price?.id,
         );
         break;
       }
@@ -117,12 +119,17 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    logError(error, { route: "/api/stripe/webhook", eventId: event.id });
-    // Return 200 even on error to prevent Stripe from retrying indefinitely
-    // (unless it's a transient error we want to retry)
+    logError(error, { route: "/api/stripe/webhook", eventId: event?.id });
+
+    // Always return 200 to Stripe even if we fail to sync a profile update.
+    // This prevents Stripe from infinitely retrying a bad payload or a deleted user,
+    // which clogs up the terminal with 500 errors and confuses developers.
     return NextResponse.json(
-      { error: "Webhook handler failed" },
-      { status: 500 },
+      {
+        error:
+          "Webhook handler caught an error but returned 200 to prevent retries. See server logs.",
+      },
+      { status: 200 },
     );
   }
 }

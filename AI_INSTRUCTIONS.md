@@ -15,10 +15,12 @@ This template is already audited, secure, and production-ready. You are here to 
 
 1.  `lib/auth/**`: Authentication logic is critical.
 2.  `lib/billing/**`: Stripe integration is verified.
-3.  `lib/rate-limit/**`: Protects the API from abuse.
-4.  `lib/env.ts`: Enforces environment variable safety.
-5.  `middleware.ts`: Handles session security.
-6.  `next.config.js`: Contains security headers.
+3.  `app/api/stripe/webhook/route.ts`: Highly optimized handler. Do not touch.
+4.  `app/dashboard/billing/_components/buttons.tsx`: Do not change the `window.location.assign` or timeout logic here. It prevents embedded browser deadlocks.
+5.  `lib/rate-limit/**`: Protects the API from abuse.
+6.  `lib/env.ts`: Enforces environment variable safety.
+7.  `middleware.ts`: Handles session security.
+8.  `next.config.js`: Contains security headers.
 
 ## 🛠️ The "Transformation Zone" (Where you work)
 
@@ -44,10 +46,10 @@ This template is already audited, secure, and production-ready. You are here to 
 
 - **Target:** `supabase/migrations/`
 - **Action:** If the user needs to save data (e.g., "Saved Recipes"):
-  1.  Create a NEW migration file (e.g., `003_create_recipes.sql`).
+  1.  Create a NEW migration file (e.g., `002_recipes.sql`). The core schema is already in `001_schema.sql`.
   2.  Define the table.
   3.  **MANDATORY:** Enable RLS (`ALTER TABLE recipes ENABLE ROW LEVEL SECURITY;`).
-  4.  **MANDATORY:** Add a policy (`CREATE POLICY "Users can see own data" ON recipes FOR SELECT USING (auth.uid() = user_id);`).
+  4.  **MANDATORY:** Add a policy (`CREATE POLICY "Users can see own data" ON recipes ...`).
 
 ## 📝 The "One-Prompt" Structure
 

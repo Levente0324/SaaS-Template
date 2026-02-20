@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 /**
  * Simple, clean login page.
  * Uses Supabase Auth for email/password sign up/in.
@@ -15,6 +14,7 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [mode, setMode] = useState<"login" | "signup">("login");
 
   const router = useRouter();
@@ -27,6 +27,7 @@ function LoginForm() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       if (mode === "signup") {
@@ -35,7 +36,9 @@ function LoginForm() {
           password,
         });
         if (error) throw error;
-        setError("Account created! You can now log in.");
+        setSuccess(
+          "Account created! Please check your email for a confirmation link (if enabled), or sign in below.",
+        );
         setMode("login");
       } else {
         const { error } = await (supabase.auth as any).signInWithPassword({
@@ -112,6 +115,12 @@ function LoginForm() {
           {error && (
             <div className="rounded-md bg-red-50 p-4">
               <div className="text-sm text-red-700">{error}</div>
+            </div>
+          )}
+
+          {success && (
+            <div className="rounded-md bg-green-50 p-4">
+              <div className="text-sm text-green-700">{success}</div>
             </div>
           )}
 

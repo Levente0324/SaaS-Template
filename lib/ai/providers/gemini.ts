@@ -17,7 +17,7 @@ import { Errors } from "@/lib/errors";
 // ─────────────────────────────────────────────────────────────
 // CUSTOMIZE: Change the model name here when a new model ships
 // ─────────────────────────────────────────────────────────────
-const GEMINI_MODEL = "gemini-1.5-flash";
+const GEMINI_MODEL = "gemini-2.5-flash";
 
 export class GeminiProvider implements AIProvider {
   private client: GoogleGenerativeAI;

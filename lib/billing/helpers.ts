@@ -112,7 +112,9 @@ export async function updateProfileFromSubscription(
     .update({
       stripe_subscription_id: subscriptionId,
       subscription_status: status,
-      current_period_end: new Date(currentPeriodEnd * 1000).toISOString(),
+      current_period_end: currentPeriodEnd
+        ? new Date(currentPeriodEnd * 1000).toISOString()
+        : new Date().toISOString(),
       plan: ACTIVE_STATUSES.includes(status as SubscriptionStatus)
         ? plan
         : "free",

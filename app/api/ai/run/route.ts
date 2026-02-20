@@ -11,6 +11,8 @@ import { runAITool } from "@/lib/ai/run-tool";
 import { safeErrorResponse, Errors } from "@/lib/errors";
 import { logError } from "@/lib/logging";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   try {
     // 1. Authenticate Request

@@ -52,15 +52,15 @@ CREATE OR REPLACE TRIGGER profiles_updated_at
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ─── Auto-create profile on user sign-up ─────────────────────
-CREATE OR REPLACE FUNCTION handle_new_user()
+CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO profiles (id, email)
+  INSERT INTO public.profiles (id, email)
   VALUES (NEW.id, NEW.email)
   ON CONFLICT (id) DO NOTHING;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
@@ -83,5 +83,18 @@ CREATE POLICY "profiles_update_own" ON profiles
 CREATE POLICY "usage_logs_select_own" ON usage_logs
   FOR SELECT USING (auth.uid() = user_id);
 
+CREATE POLICY "usage_logs_insert_own" ON usage_logs
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
 -- webhook_events: no user access (service role only)
 -- No policies added = zero public access with RLS enabled
+-- ============================================================
+-- Migration: 002_add_usage_logs_index.sql
+-- Optimizes daily usage limit checks.
+-- ============================================================
+
+-- Create a composite index on user_id and created_at
+-- This allows the usage limit check to efficiently count rows
+-- for a specific user within a time range.
+CREATE INDEX IF NOT EXISTS idx_usage_logs_user_created 
+ON usage_logs(user_id, created_at);

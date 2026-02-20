@@ -1,7 +1,24 @@
 # 📘 The Master Guide: From Template to SaaS
 
 **Welcome.** You have purchased the **AntiGravity AI SaaS Template**.
-This guide explains exactly how to turn this code into a profitable, secure business—whether you use AI to build it or code it yourself.
+This guide explains exactly how to set up your template and turn it into a profitable, secure business in under an hour.
+
+---
+
+## 🏁 Initial Setup (Do this before anything else)
+
+1. **Install Dependencies:** Open a terminal and run `npm install`.
+2. **Setup Environment Variables:** Duplicate the `.env.example` file and rename it to `.env.local`. You will paste all your API keys into this new file.
+3. **Connect the Database (Supabase):**
+   - Create a free project on [Supabase.com](https://supabase.com/).
+   - Go to your Project Settings > API, copy the **URL** and **anon key**, and paste them into your `.env.local` file.
+   - Click "SQL Editor" on the left menu in Supabase.
+   - Open the `supabase/migrations/001_schema.sql` file from this codebase. Copy all the text inside it, paste it into the Supabase SQL Editor, and click **RUN**. This securely creates your tables, Row-Level Security (RLS) policies, and triggers in one click!
+4. **Connect Payments (Stripe):**
+   - Create a free account on [Stripe.com](https://stripe.com/).
+   - Grab your **Publishable key** and **Secret key** from the dashboard and paste them into `.env.local`.
+   - In Stripe, create a new "Product" (e.g., Premium Tier) and give it a "Price" (e.g., $9/month). Copy the `price_...` ID and paste it into `STRIPE_PRICE_ID` in your `.env.local`.
+   - Generate a Webhook secret in your Stripe dashboard (listening to `checkout.session.completed`, `customer.subscription.*` events) and paste that into `STRIPE_WEBHOOK_SECRET`.
 
 ---
 
@@ -12,7 +29,7 @@ This app is built like a fortress.
 - **Frontend:** Next.js 14 (App Router) + Tailwind CSS.
 - **The "Brain":** `lib/ai/run-tool.ts`. This is the single entry point for all AI logic.
 - **The Guard:** `lib/rate-limit` & `lib/billing`. No one uses your AI without paying or staying within limits.
-- **The Vault:** Supabase (PostgreSQL) stores user data with Row Level Security (RLS). A user can _only_ see their own data.
+- **The Vault:** Supabase (PostgreSQL) stores user data securely. RLS ensures users can _only_ see their own data.
 
 ---
 
@@ -24,7 +41,7 @@ If you don't want to code, use the included `AI_PROMPT.txt`.
 2.  **Replace** the text `[INSERT_YOUR_BUSINESS_IDEA_HERE]` with your idea (e.g., "A Cover Letter Generator").
 3.  **Copy** the entire text.
 4.  **Paste** it into an AI coding assistant (Cursor, Windsurf, or ChatGPT).
-5.  **Watch** it handle the rest.
+5.  **Watch** it handle the rest and build your app for you.
 
 ---
 
@@ -48,7 +65,7 @@ Go to `lib/ai/run-tool.ts`.
 ### 3. How to add new Database Tables
 
 - Go to `supabase/migrations`.
-- Create a new file (e.g., `003_tasks.sql`).
+- Create a new file (e.g., `002_tasks.sql`). (001_schema.sql is the master foundation).
 - Write standard SQL.
 - **CRITICAL:** Always add the line `ALTER TABLE your_table_name ENABLE ROW LEVEL SECURITY;`.
 
@@ -77,9 +94,9 @@ When you are ready to launch:
 
 1.  [ ] Run `npm run lint` to check for code errors.
 2.  [ ] Run `npm run build` to ensure the app compiles.
-3.  [ ] Deploy to **Vercel** (recommended).
+3.  [ ] Push to GitHub and deploy to **Vercel** (recommended).
 4.  [ ] Add your **Production Environment Variables** in Vercel.
-5.  [ ] In **Stripe**, switch from "Test Mode" to "Live Mode" and copy your live keys.
-6.  [ ] In **Supabase**, ensure you are using the production URL.
+5.  [ ] In **Stripe**, switch from "Test Mode" to "Live Mode", copy your live keys to Vercel, and update the Stripe Webhook URL to point to your live Vercel domain.
+6.  [ ] In **Supabase**, ensure your Google Auth settings reflect your final domain.
 
-**Good luck!** You are building on a solid foundation.
+**Good luck!** You are building on a rock-solid foundation.
