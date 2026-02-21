@@ -23,22 +23,22 @@ export default async function BillingPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">
+        <h2 className="text-3xl font-bold tracking-tight text-foreground">
           Billing & Subscription
         </h2>
-        <p className="text-gray-500">
+        <p className="text-foreground/60">
           Manage your subscription and billing details.
         </p>
       </div>
 
       <div className="grid gap-8 md:grid-cols-2">
         {/* Current Plan Card */}
-        <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
-          <div className="p-6 border-b bg-gray-50/50">
-            <h3 className="font-semibold text-lg flex items-center">
+        <div className="rounded-xl border border-border/50 bg-card shadow-sm overflow-hidden transition-colors duration-300">
+          <div className="p-6 border-b border-border/50 bg-muted/20">
+            <h3 className="font-semibold text-lg flex items-center text-foreground">
               Current Plan
               {isPro && (
-                <span className="ml-3 inline-flex items-center rounded-full bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+                <span className="ml-3 inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20">
                   Pro Active
                 </span>
               )}
@@ -46,23 +46,25 @@ export default async function BillingPage() {
           </div>
           <div className="p-6 space-y-6">
             <div className="flex items-baseline space-x-2">
-              <span className="text-4xl font-bold tracking-tight text-gray-900">
+              <span className="text-4xl font-bold tracking-tight text-foreground">
                 {isPro ? "$19" : "$0"}
               </span>
-              <span className="text-gray-500">/month</span>
+              <span className="text-foreground/60">/month</span>
             </div>
 
             <div className="space-y-2">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-foreground/60">
                 Status:{" "}
-                <span className="font-medium text-gray-900 capitalize">
+                <span className="font-medium text-foreground capitalize">
                   {status || "Free"}
                 </span>
               </p>
               {periodEnd && (
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-foreground/60">
                   {isCanceled ? "Expires on" : "Renews on"}:{" "}
-                  <span className="font-medium text-gray-900">{periodEnd}</span>
+                  <span className="font-medium text-foreground">
+                    {periodEnd}
+                  </span>
                 </p>
               )}
             </div>
@@ -72,24 +74,34 @@ export default async function BillingPage() {
         </div>
 
         {/* Features List */}
-        <div className="rounded-xl border bg-slate-900 text-white shadow-sm p-8">
-          <h3 className="font-semibold text-lg mb-6">Pro Features</h3>
+        <div className="rounded-xl border border-border/50 bg-primary text-primary-foreground shadow-sm p-8 transition-colors duration-300">
+          <h3 className="font-semibold text-lg mb-6 text-primary-foreground">
+            Pro Features
+          </h3>
           <ul className="space-y-4">
             <li className="flex items-center space-x-3">
-              <Check className="h-5 w-5 text-indigo-400 flex-shrink-0" />
-              <span>Unlimited AI Generations</span>
+              <Check className="h-5 w-5 text-primary-foreground/70 flex-shrink-0" />
+              <span className="text-primary-foreground/90">
+                Unlimited AI Generations
+              </span>
             </li>
             <li className="flex items-center space-x-3">
-              <Check className="h-5 w-5 text-indigo-400 flex-shrink-0" />
-              <span>Priority Support</span>
+              <Check className="h-5 w-5 text-primary-foreground/70 flex-shrink-0" />
+              <span className="text-primary-foreground/90">
+                Priority Support
+              </span>
             </li>
             <li className="flex items-center space-x-3">
-              <Check className="h-5 w-5 text-indigo-400 flex-shrink-0" />
-              <span>Advanced Analytics</span>
+              <Check className="h-5 w-5 text-primary-foreground/70 flex-shrink-0" />
+              <span className="text-primary-foreground/90">
+                Advanced Analytics
+              </span>
             </li>
             <li className="flex items-center space-x-3">
-              <Check className="h-5 w-5 text-indigo-400 flex-shrink-0" />
-              <span>Early Access to New Features</span>
+              <Check className="h-5 w-5 text-primary-foreground/70 flex-shrink-0" />
+              <span className="text-primary-foreground/90">
+                Early Access to New Features
+              </span>
             </li>
           </ul>
         </div>

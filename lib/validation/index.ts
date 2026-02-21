@@ -14,10 +14,7 @@ export const AIRunSchema = z.object({
     .min(1, "toolName is required")
     .max(100, "toolName too long")
     .regex(/^[a-zA-Z0-9_-]+$/, "toolName contains invalid characters"),
-  input: z
-    .string()
-    .min(1, "input is required")
-    .max(10_000, "input too long (max 10,000 characters)"),
+  input: z.any(), // Flexible payload, strictly validated later by the specific tool's schema
 });
 
 /** Stripe checkout request */

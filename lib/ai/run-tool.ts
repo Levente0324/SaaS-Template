@@ -34,7 +34,8 @@ const TOOL_REGISTRY: Record<string, { prompt: string; schema: z.ZodSchema }> = {
     prompt:
       "You are a helpful assistant. Answer the user's question concisely and accurately.",
     // 💡 EDIT THIS: This is the Input Schema. What data do you need from the user?
-    schema: z.object({ input: z.string().min(1).max(10_000) }),
+    // The structure you define here MUST match the JSON object the frontend sends in `input`.
+    schema: z.object({ promptText: z.string().min(1).max(10_000) }),
   },
   // You can add multiple tools here if your app does multiple things.
 };
@@ -42,7 +43,7 @@ const TOOL_REGISTRY: Record<string, { prompt: string; schema: z.ZodSchema }> = {
 interface RunAIToolOptions {
   userId: string;
   toolName: string;
-  input: string;
+  input: any; // Dynamic JSON payload from the client
 }
 
 // ...
@@ -67,10 +68,11 @@ export async function runAITool({
   }
 
   // ── Step 3: Validate input against tool schema ───────────────────────────
-  const parsed = tool.schema.safeParse({ input });
+  // The specific tool defines exactly what JSON structure it expects in `input`.
+  const parsed = tool.schema.safeParse(input);
   if (!parsed.success) {
     throw Errors.invalidInput(
-      parsed.error.errors[0]?.message ?? "Invalid input",
+      parsed.error.errors[0]?.message ?? "Invalid AI input payload",
     );
   }
 
@@ -88,14 +90,18 @@ export async function runAITool({
   }
 
   // ── Step 7: Generate with timeout ────────────────────────────────────────
-  const timeoutMs = parseInt(env.AI_REQUEST_TIMEOUT_MS ?? "30000", 10);
+  const timeoutMs = parseInt(env.AI_REQUEST_TIMEOUT_MS ?? "60000", 10);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   let result;
   try {
     result = await generateText(
-      { prompt: tool.prompt, input, provider: "gemini" },
+      {
+        prompt: tool.prompt,
+        input: JSON.stringify(parsed.data),
+        provider: "gemini",
+      },
       controller.signal,
     );
   } finally {
@@ -122,5 +128,6 @@ export async function runAITool({
   return {
     success: true,
     result: result.text,
+    imageUrl: result.imageUrl,
   };
 }

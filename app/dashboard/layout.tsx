@@ -23,9 +23,9 @@ export default async function DashboardLayout({
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-background text-foreground transition-colors duration-300">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md hidden md:flex flex-col">
+      <aside className="w-64 border-r bg-card/50 backdrop-blur-xl hidden md:flex flex-col">
         <div className="p-6 border-b">
           <h1 className="text-xl font-bold text-gray-800">AI SaaS Starter</h1>
         </div>
@@ -48,15 +48,15 @@ export default async function DashboardLayout({
           </Link>
         </nav>
 
-        <div className="p-4 border-t bg-gray-50">
+        <div className="p-4 border-t border-border/50 bg-muted/20">
           <div className="flex items-center justify-between">
-            <div className="truncate text-sm text-gray-600 px-2">
+            <div className="truncate text-sm text-foreground/70 px-2">
               {user.email}
             </div>
             <form action={signOut}>
               <button
                 type="submit"
-                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                className="p-2 text-foreground/50 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-colors"
                 title="Sign out"
               >
                 <LogOut size={18} />

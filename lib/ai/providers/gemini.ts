@@ -20,14 +20,17 @@ import { Errors } from "@/lib/errors";
 const GEMINI_MODEL = "gemini-2.5-flash";
 
 export class GeminiProvider implements AIProvider {
-  private client: GoogleGenerativeAI;
+  private client: GoogleGenerativeAI | null = null;
 
-  constructor() {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error("GEMINI_API_KEY environment variable is not set.");
+  private getClient(): GoogleGenerativeAI {
+    if (!this.client) {
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        throw new Error("GEMINI_API_KEY environment variable is not set.");
+      }
+      this.client = new GoogleGenerativeAI(apiKey);
     }
-    this.client = new GoogleGenerativeAI(apiKey);
+    return this.client;
   }
 
   async generate(
@@ -37,7 +40,8 @@ export class GeminiProvider implements AIProvider {
     const startTime = Date.now();
 
     try {
-      const model = this.client.getGenerativeModel({ model: GEMINI_MODEL });
+      const client = this.getClient();
+      const model = client.getGenerativeModel({ model: GEMINI_MODEL });
 
       // Combine system prompt + user input
       const fullPrompt = `${options.prompt}\n\n---\n\nUser Input:\n${options.input}`;
@@ -49,13 +53,13 @@ export class GeminiProvider implements AIProvider {
 
       const result = await model.generateContent(fullPrompt);
       const response = result.response;
+      const text = response.text(); // Await full stream resolution
 
-      // Check abort after response
+      // Check abort after the full text response is collected
       if (signal?.aborted) {
         throw Errors.internal("Request cancelled after AI response");
       }
 
-      const text = response.text();
       const tokensUsed = response.usageMetadata?.totalTokenCount ?? undefined;
 
       return {

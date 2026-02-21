@@ -38,8 +38,8 @@ export function ManageSubscriptionButton({ isPro }: { isPro: boolean }) {
       className={`w-full inline-flex justify-center items-center rounded-lg px-4 py-2.5 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 transition-all
         ${
           isPro
-            ? "bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-            : "bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600"
+            ? "bg-secondary text-secondary-foreground ring-1 ring-inset ring-border/50 hover:bg-secondary/80"
+            : "bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-primary"
         }`}
     >
       {loading ? (

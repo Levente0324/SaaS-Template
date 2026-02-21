@@ -1,9 +1,9 @@
 # 🤖 AI Agent Instructions
 
-**MISSION:** You are an expert AI software engineer. Your goal is to transform this production-ready SaaS template into the user's specific business idea using **surgical precision**.
+**MISSION:** You are an expert AI software engineer. Your goal is to transform this production-ready SaaS template into the user's specific business idea using **surgical precision** and **cinematic front-end design**.
 
 **CRITICAL PRIORITY:** DO NOT BREAK THE SECURITY OR ARCHITECTURE.
-This template is already audited, secure, and production-ready. You are here to change the _content_ and the _style_, not the _plumbing_.
+This template is already audited, secure, and production-ready. You are here to change the _content_, the _style_, and the _AI payload structure_, not the _plumbing_.
 
 ## 🚀 AI Agent Onboarding
 
@@ -24,23 +24,21 @@ This template is already audited, secure, and production-ready. You are here to 
 
 ## 🛠️ The "Transformation Zone" (Where you work)
 
-### 1. The "Brain" (Business Logic)
+### 1. The "Brain" (Business Logic mapping JSON payloads)
 
 - **Target:** `lib/ai/run-tool.ts`
 - **Action:**
   1.  **RENAME** the tool in `TOOL_REGISTRY` to match the business idea (e.g., `generate_recipe` instead of `demo`).
-  2.  **REWRITE** the `prompt` string. This is the most important part. Make it extremely specific (e.g., "You are a Michelin-star chef...").
-  3.  **UPDATE** the `schema` (Zod) to match the user's input fields.
+  2.  **REWRITE** the `prompt` string. Make it extremely specific concerning what the AI should output.
+  3.  **UPDATE** the `schema` (Zod) to match the exact JSON object the frontend form will send (e.g., `schema: z.object({ age: z.number(), goal: z.string() })`).
+  4.  **IMAGE GENERATION:** If the prompt requires an Image Generator (e.g. Nano Banana, Replicate), `npm install` their SDK and update `runAITool`'s Step 7 to return `{ success: true, imageUrl: "..." }`. **CRITICAL SECURITY:** Never overwrite Steps 1-6 (Kill Switch, Validation, Billing, Rate Limits) when installing an Image SDK. Only alter Step 7. The frontend `app/dashboard/page.tsx` natively handles the `imageUrl` property by rendering a cinematic image block automatically.
 
-### 2. The "Skin" (Design & Copy)
+### 2. The "Skin" (Cinematic UI/UX)
 
-- **Target:** `app/page.tsx` (Landing Page)
-  - **Rule:** Use "Premium" design tokens.
-  - **Gradients:** Use subtle, rich gradients (e.g., `bg-gradient-to-r from-blue-600 to-violet-600`).
-  - **Glassmorphism:** Use `backdrop-blur-md bg-white/10 border-white/10` for cards.
-  - **Typography:** Maintain the `Inter` font but use tight tracking (`tracking-tight`) for headings.
-- **Target:** `app/dashboard/page.tsx` (App Interface)
-  - **Action:** enhance the form to accept the inputs defined in Step 1.
+- **Target:** `app/page.tsx`, `app/(public)/login/page.tsx`, `app/dashboard/page.tsx`, `app/dashboard/layout.tsx`
+- **Action:** Apply the chosen Aesthetic Preset globally. Eradicate plain "basic white" utility backgrounds.
+- **Rule:** Use pre-installed `gsap` for all entrance animations (`power3.out`). Do not install framer-motion.
+- **Form Mapping:** In `app/dashboard/page.tsx`, build a premium form collecting the inputs you defined in the Zod schema. Update the fetch block to send exact JSON: `body: JSON.stringify({ toolName: "your_tool", input: { your: "data" } })`
 
 ### 3. The Database (Optional)
 
@@ -49,28 +47,22 @@ This template is already audited, secure, and production-ready. You are here to 
   1.  Create a NEW migration file (e.g., `002_recipes.sql`). The core schema is already in `001_schema.sql`.
   2.  Define the table.
   3.  **MANDATORY:** Enable RLS (`ALTER TABLE recipes ENABLE ROW LEVEL SECURITY;`).
-  4.  **MANDATORY:** Add a policy (`CREATE POLICY "Users can see own data" ON recipes ...`).
+  4.  **MANDATORY:** Add exact policies:
+      `CREATE POLICY "select_own" ON recipes FOR SELECT USING (auth.uid() = user_id);`
+      `CREATE POLICY "insert_own" ON recipes FOR INSERT WITH CHECK (auth.uid() = user_id);`
 
-## 📝 The "One-Prompt" Structure
+## 🎨 Cinematic Design Guidelines
 
-If the user gives you a prompt like "Make this a Dog Walking App", do this:
+When transforming the frontend, apply these rules:
 
-1.  **Analyze:** Identify the core utility (e.g., "Generate walking routes").
-2.  **Modify `lib/ai/run-tool.ts`:** Update the prompt to generate walking routes.
-3.  **Modify `app/page.tsx`:** Change "AI SaaS Starter" to "PuppyPaths - AI Dog Routes".
-4.  **Modify `app/dashboard/page.tsx`:** Add inputs for "Dog Breed" and "Walk Duration".
-5.  **Stop:** Do not rewrite the auth system. Do not change the payment logic.
-
-## 🎨 Premium Design Guidelines (For AI Implementation)
-
-When the user asks for "Premium Design", apply these Tailwind classes:
-
-- **Buttons:** `rounded-full shadow-lg hover:shadow-xl transition-all active:scale-95`
-- **Cards:** `rounded-2xl border border-gray-100 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm`
-- **Text:** `text-gray-900 dark:text-white` for headings, `text-gray-500 dark:text-gray-400` for body.
+- **Never use plain backgrounds.** Use specific hex-code background variables across the body, layout, and nav.
+- **Containers:** Use `rounded-[2rem]` to `rounded-[3rem]`. No sharp corners anywhere.
+- **Buttons:** `rounded-full shadow-lg hover:scale-[1.03] transition-transform`
+- **Animations:** Use `gsap.context()` for staggering list entries on the Dashboard.
 
 **Final Check:**
 
-- Did I break strict mode? (No `any` types allowed).
+- Did I break strict mode?
 - Did I hardcode an API key? (Never. Use `env.GEMINI_API_KEY`).
-- Did I bypass RLS? (Never. Always use `createClient`).
+- Did I bypass RLS? (Never.)
+- Did I leave the Dashboard background plain white? (Never.)

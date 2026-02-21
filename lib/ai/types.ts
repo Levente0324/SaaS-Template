@@ -18,7 +18,8 @@ export interface AIGenerateOptions {
 }
 
 export interface AIGenerateResult {
-  text: string;
+  text?: string;
+  imageUrl?: string;
   tokensUsed?: number; // Prompt + completion tokens if available
   provider: AIProviderName;
   durationMs: number;

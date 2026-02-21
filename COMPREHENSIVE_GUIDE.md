@@ -33,15 +33,15 @@ This app is built like a fortress.
 
 ---
 
-## 🤖 The "AI-Only" Path (Easiest)
+## 🤖 The "AI-Only" Path (The Cinematic SaaS Builder)
 
-If you don't want to code, use the included `AI_PROMPT.txt`.
+If you don't want to code, use the included `AI_PROMPT.txt` Master Prompt. It has been extensively engineered to force AI agents to build pixel-perfect, secure SaaS products natively handling either **Text Generation** or **Image Generation (Nano Banana, Replicate, etc.)**.
 
 1.  **Open** the file `AI_PROMPT.txt`.
-2.  **Replace** the text `[INSERT_YOUR_BUSINESS_IDEA_HERE]` with your idea (e.g., "A Cover Letter Generator").
-3.  **Copy** the entire text.
-4.  **Paste** it into an AI coding assistant (Cursor, Windsurf, or ChatGPT).
-5.  **Watch** it handle the rest and build your app for you.
+2.  **Copy** the entire text exactly as it is.
+3.  **Paste** it into an AI coding assistant (Cursor, Windsurf, or ChatGPT).
+4.  **Answer the 8 Questions:** The AI will immediately stop and interview you about your brand, aesthetic preset, pricing, dashboard inputs, and whether you are building a **Text** or **Image Generator**.
+5.  **Watch** it surgically execute the 5-Phase Roadmap to build your app natively handling all database schemas, UI redesigns, Image block rendering, and backend AI routing.
 
 ---
 

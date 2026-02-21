@@ -39,6 +39,7 @@ export interface UsageLog {
 export interface AIToolResult {
   success: boolean;
   result?: string;
+  imageUrl?: string; // Supports image generation AI modals (DALL-E, Nano Banana, Fal.ai)
   error?: string;
 }
 

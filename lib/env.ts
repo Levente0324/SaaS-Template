@@ -31,15 +31,25 @@ const envSchema = z.object({
 // Validate process.env
 const parsed = envSchema.safeParse(process.env);
 
+const isBuildPhase =
+  process.env.npm_lifecycle_event === "build" ||
+  process.env.NEXT_PHASE === "phase-production-build";
+
 if (!parsed.success) {
-  const errorMsg = `❌ Invalid environment variables: ${JSON.stringify(
-    parsed.error.format(),
-    null,
-    4,
-  )}`;
-  console.error(errorMsg);
-  // Throwing ensures the app crashes on start, even in Edge runtime
-  throw new Error(errorMsg);
+  console.error(
+    "❌ Invalid environment variables:",
+    JSON.stringify(parsed.error.format(), null, 4),
+  );
+
+  if (!isBuildPhase) {
+    // Throwing ensures the app crashes on start so the developer knows to fix the .env file
+    throw new Error("Invalid environment variables");
+  } else {
+    console.warn(
+      "⚠️ Skipping environment validation during build phase to prevent CI/CD crashes.",
+    );
+  }
 }
 
-export const env = parsed.data;
+// Export parsed data safely, fallback to process.env during build phase to prevent TS crashes
+export const env = parsed.success ? parsed.data : (process.env as any);

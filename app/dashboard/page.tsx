@@ -6,6 +6,7 @@ import { Sparkles, Loader2, AlertCircle } from "lucide-react";
 type AIResult = {
   success: boolean;
   result?: string;
+  imageUrl?: string;
   error?: string;
 };
 
@@ -27,7 +28,7 @@ export default function DashboardPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           toolName: "demo", // Must match a tool in lib/ai/run-tool.ts
-          input: input,
+          input: { promptText: input },
         }),
       });
 
@@ -43,23 +44,25 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight">AI Generator</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-foreground">
+          AI Generator
+        </h2>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Input Section */}
-        <div className="rounded-xl border bg-white shadow-sm p-6">
+        <div className="rounded-xl border border-border/50 bg-card shadow-sm p-6 transition-colors duration-300">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label
                 htmlFor="prompt"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-foreground/80 mb-2"
               >
                 Enter your prompt
               </label>
               <textarea
                 id="prompt"
-                className="w-full min-h-[200px] rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 resize-none p-3 border"
+                className="w-full min-h-[200px] rounded-lg border-border/50 bg-background/50 text-foreground shadow-sm focus:border-indigo-500 focus:ring-indigo-500 resize-none p-3 border"
                 placeholder="Ask me anything..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -88,19 +91,38 @@ export default function DashboardPage() {
         </div>
 
         {/* Output Section */}
-        <div className="rounded-xl border bg-white shadow-sm p-6 min-h-[300px] flex flex-col">
-          <h3 className="text-sm font-medium text-gray-700 mb-4">Result</h3>
+        <div className="rounded-xl border border-border/50 bg-card shadow-sm p-6 min-h-[300px] flex flex-col transition-colors duration-300">
+          <h3 className="text-sm font-medium text-foreground/80 mb-4">
+            Result
+          </h3>
 
-          <div className="flex-1 rounded-lg bg-gray-50 p-4 border border-gray-100 overflow-auto">
+          <div className="flex-1 rounded-lg bg-muted/30 p-4 border border-border/50 overflow-auto">
             {loading ? (
-              <div className="flex h-full items-center justify-center text-gray-400">
-                <Loader2 className="h-8 w-8 animate-spin opacity-20" />
+              <div className="flex h-full items-center justify-center text-foreground/40">
+                <Loader2 className="h-8 w-8 animate-spin opacity-50" />
               </div>
             ) : response ? (
               response.success ? (
-                <div className="prose prose-sm max-w-none text-gray-800 whitespace-pre-wrap">
-                  {response.result}
-                </div>
+                response.imageUrl ? (
+                  <div className="flex flex-col items-center justify-center space-y-4">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={response.imageUrl}
+                      alt="AI Generated Result"
+                      className="w-full max-w-full h-auto rounded-md shadow-sm border border-border/50 object-cover"
+                      loading="lazy"
+                    />
+                    {response.result && (
+                      <p className="text-sm text-foreground/70 italic text-center">
+                        {response.result}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap">
+                    {response.result}
+                  </div>
+                )
               ) : (
                 <div className="flex h-full items-center justify-center text-red-500 space-x-2">
                   <AlertCircle className="h-5 w-5" />
@@ -108,7 +130,7 @@ export default function DashboardPage() {
                 </div>
               )
             ) : (
-              <div className="flex h-full items-center justify-center text-gray-400 text-sm">
+              <div className="flex h-full items-center justify-center text-foreground/40 text-sm">
                 Your AI-generated content will appear here.
               </div>
             )}
