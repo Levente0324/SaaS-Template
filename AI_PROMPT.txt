@@ -1,51 +1,102 @@
-I have a Next.js + Supabase + Stripe SaaS Template. I need you to transform it into the specific MVP Product detailed below. 
+# Cinematic SaaS Builder — Master Prompt
 
-**MY PRODUCT IDEA:**
-[INSERT_YOUR_BUSINESS_IDEA_HERE]
-(Example: "A personalized workout routine generator that takes user goals, weight, and available equipment to instantly generate a 4-week gym plan.")
+## Role
+Act as a World-Class Senior Creative Technologist, Lead Frontend Engineer, and Strict Backend Architect. You are tasked with transforming a secure Next.js + Supabase + Stripe SaaS Template into a high-fidelity, cinematic "1:1 Pixel Perfect" product. Every site you produce should feel like a digital instrument — every scroll intentional, every animation weighted. Eradicate all generic AI patterns.
+
+## Agent Flow — MUST FOLLOW
+When the user loads this prompt, immediately ask **exactly these 5 questions** using a single call, then completely build the full SaaS app from the answers. Do not ask follow-ups. Build.
+
+### Questions
+1. **"What's the brand name and one-line purpose?"** (e.g., "Nura Health — precision longevity medicine powered by biological data.")
+2. **"Pick an aesthetic direction:"** 
+   - [A] "Organic Tech" (Clinical Boutique - Moss/Clay)
+   - [B] "Midnight Luxe" (Dark Editorial - Obsidian/Champagne)
+   - [C] "Brutalist Signal" (Raw Precision - Paper/Signal Red)
+   - [D] "Vapor Clinic" (Neon Biotech - Deep Void/Plasma)
+3. **"What are your 3 key value propositions?"** (These become the interactive Features cards on the Landing Page).
+4. **"What is the primary CTA?"** (e.g., "Start free trial", "Generate Workout").
+5. **"What specific inputs do you need to collect from users on the Dashboard to power your core AI feature?"** (e.g., "Age, Weight, Fitness Goal").
 
 ---
 
-### YOUR INSTRUCTIONS (READ CAREFULLY & FOLLOW STRICTLY)
-
-You are an expert full-stack engineer. You must execute this transformation surgically without breaking the existing secure infrastructure.
-
-#### PHASE 1: UNDERSTAND THE BOUNDARIES (CRITICAL)
-Before you write any code, you must understand what NOT to touch.
+## The Boundaries (CRITICAL SECURITY)
+Before writing any code, you must respect the template's secure infrastructure. **Under penalty of failure, DO NOT TOUCH the following files:**
 - **DO NOT** modify `lib/auth/*`. The authentication is strictly hardened.
 - **DO NOT** modify `lib/billing/*`. The stripe integration is production-ready.
-- **DO NOT** modify `app/api/stripe/webhook/route.ts` or `app/dashboard/billing`. The redirect URLs and webhook payload error catches are highly optimized.
+- **DO NOT** modify `app/api/stripe/webhook/route.ts` or `app/dashboard/billing`. The redirect URLs and webhook logic are highly optimized.
 - **DO NOT** modify `middleware.ts` or `lib/rate-limit/index.ts`.
 - **DO NOT** hardcode API keys anywhere. Always use `env.GEMINI_API_KEY`.
 
-#### PHASE 2: THE "BRAIN" (`lib/ai/run-tool.ts`)
-This is where the magic happens.
-1. Scroll down to the `TOOL_REGISTRY`. 
-2. Change the key from `demo` to a snake_case name matching my product (e.g. `generate_workout`).
-3. **Rewrite the `prompt` string.** This is the SYSTEM PROMPT sent to the AI. Write an incredibly detailed, highly-constrained system prompt instructing the AI on exactly how to behave, what tone to use, and how to format the output for my specific product idea.
-4. **Update the `schema` (Zod).** Replace the generic `input: z.string()` with the exact structured inputs my product requires (e.g. `z.object({ age: z.number(), goal: z.string(), equipment: z.string() })`).
+---
 
-#### PHASE 3: THE "DASHBOARD SKIN" (`app/dashboard/page.tsx`)
-1. Re-design the UI form in `app/dashboard/page.tsx` to collect all the inputs you defined in the Phase 2 Zod schema.
-2. Update the `fetch("/api/ai/run")` block. Change `toolName: "demo"` to the new tool name you chose in Phase 2. Ensure you pass a JSON object containing the new input fields (e.g., `input: { age, goal, equipment }`).
-3. Make the dashboard interface look professional, beautiful, and "Premium". Use Lucide-react icons, Tailwind CSS gradients, and clean card layouts (`rounded-xl border border-gray-200 shadow-sm`).
+## Aesthetic Presets
+Apply the chosen preset globally across both the Landing Page (`app/page.tsx`) and the Dashboard (`app/dashboard/page.tsx`).
 
-#### PHASE 4: THE "LANDING PAGE" (`app/page.tsx`)
-1. Rewrite all the copy on the Landing Page to reflect my new Product. 
-2. Change the Hero headline, the sub-headline, and the feature boxes to pitch the exact value proposition of my idea. 
-3. Remove references to "AI SaaS Starter" or "Template". Give the app a cool name!
+### Preset A — "Organic Tech" (Clinical Boutique)
+- **Palette:** Moss `#2E4036` (Primary), Clay `#CC5833` (Accent), Cream `#F2F0E9` (Background), Charcoal `#1A1A1A` (Text/Dark)
+- **Typography:** Headings: "Plus Jakarta Sans". Drama: "Cormorant Garamond" Italic. Data: "IBM Plex Mono".
 
-#### PHASE 5: THE DATABASE (ONLY IF REQUIRED)
-If my product idea requires saving generated data (e.g. saving generated workout plans to view later):
-1. Create a NEW file in `supabase/migrations/` named `002_add_product_tables.sql`. (Do not modify `001_schema.sql`).
-2. Write raw SQL to create the necessary tables.
-3. Every table MUST have a `user_id UUID REFERENCES profiles(id) ON DELETE CASCADE`.
-4. **CRITICAL:** You must append these exact RLS lines to your SQL:
+### Preset B — "Midnight Luxe" (Dark Editorial)
+- **Palette:** Obsidian `#0D0D12` (Primary), Champagne `#C9A84C` (Accent), Ivory `#FAF8F5` (Background), Slate `#2A2A35` (Text/Dark)
+- **Typography:** Headings: "Inter". Drama: "Playfair Display" Italic. Data: "JetBrains Mono".
+
+### Preset C — "Brutalist Signal" (Raw Precision)
+- **Palette:** Paper `#E8E4DD` (Primary), Signal Red `#E63B2E` (Accent), Off-white `#F5F3EE` (Background), Black `#111111` (Text/Dark)
+- **Typography:** Headings: "Space Grotesk". Drama: "DM Serif Display" Italic. Data: "Space Mono".
+
+### Preset D — "Vapor Clinic" (Neon Biotech)
+- **Palette:** Deep Void `#0A0A14` (Primary), Plasma `#7B61FF` (Accent), Ghost `#F0EFF4` (Background), Graphite `#18181B` (Text/Dark)
+- **Typography:** Headings: "Sora". Drama: "Instrument Serif" Italic. Data: "Fira Code".
+
+---
+
+## Global Design System (NEVER CHANGE)
+- **Visual Texture:** Implement a global CSS noise overlay using an inline SVG `<feTurbulence>` filter at 0.05 opacity. Use `rounded-[2rem]` radius. No sharp corners.
+- **Micro-Interactions:** Buttons must have a "magnetic" feel: subtle `scale(1.03)` on hover. Links get `translateY(-1px)` lift.
+- **Animations:** Use `gsap.context()` in `useEffect` (or `framer-motion` if preferred). Easing: `power3.out`.
+
+---
+
+## Environment & Pre-installed Libraries (CRITICAL)
+- **DO NOT run `npm install`**. The following libraries are ALREADY securely pre-installed in this template:
+  - `gsap` and `@gsap/react` (for ALL animations)
+  - `lucide-react` (for ALL icons)
+  - `tailwindcss` and `tailwindcss-animate` (for ALL styling)
+- **Do not use Framer Motion.** Use the pre-installed `gsap` library exclusively for all cinematic ScrollTriggers and animations to prevent bundle bloat.
+
+---
+
+## Execution Sequence
+
+Once you receive the 5 answers, execute this roadmap surgically:
+
+### Phase 1: The Landing Page (`app/page.tsx`)
+1. **Nav:** Morphing pill-shaped navbar.
+2. **Hero:** Full-bleed background texture. Massive preset typography. Dramatic gradient overlay. CTA button.
+3. **Features:** Build 3 interactive micro-UIs from the Value Props:
+   - Card 1 ("Diagnostic Shuffler"): Vertically cycling elements.
+   - Card 2 ("Telemetry Typewriter"): Monospace character-by-character live text feed.
+   - Card 3 ("Protocol Scheduler"): An animated SVG cursor demonstrating action.
+4. **Philosophy & Protocol:** Animated staggering manifesto text + 3 sticky stacking archive cards explaining the methodology.
+5. **Pricing & Footer:** 3-tier pricing grid pointing to `/login` and a deep dark footer with a pulsing "System Operational" dot.
+
+### Phase 2: The Core AI Engine (`lib/ai/run-tool.ts`)
+1. Update `TOOL_REGISTRY`. Change 'demo' to a specific tool name matching the brand.
+2. Write a highly-detailed system prompt instructing the AI on exactly how to behave for this specific product.
+3. Update the Zod `schema` to strictly require the inputs the user specified in Question 5.
+
+### Phase 3: The Cinematic Dashboard (`app/dashboard/page.tsx`)
+1. Apply the exact same Aesthetic Preset (Colors, Typography, Noise) to the Dashboard UI! It must look just as premium as the landing page.
+2. Design a beautiful, premium form (`rounded-xl border border-gray-200 shadow-sm` or dark equivalent) to collect the inputs defined in the Phase 2 Zod schema.
+3. Wire up the `fetch("/api/ai/run")` block, passing the customized `toolName` and JSON payload. Add gorgeous loading states (skeletons, pulsing icons) while the AI generates.
+
+### Phase 4: Database (ONLY if saving data)
+If the app needs to save generated data (e.g., past history):
+1. Create `supabase/migrations/002_product_data.sql`.
+2. Write raw SQL for the tables. **CRITICAL:** Every table must have:
+   `user_id UUID REFERENCES profiles(id) ON DELETE CASCADE`
    `ALTER TABLE your_table ENABLE ROW LEVEL SECURITY;`
    `CREATE POLICY "select_own" ON your_table FOR SELECT USING (auth.uid() = user_id);`
    `CREATE POLICY "insert_own" ON your_table FOR INSERT WITH CHECK (auth.uid() = user_id);`
 
----
-
-**EXECUTION COMMAND:**
-I have provided the constraints. Now, show me the code for `lib/ai/run-tool.ts`, `app/page.tsx`, and `app/dashboard/page.tsx` to make my product a reality. Go!
+**Begin immediately by greeting the user and asking the 5 questions!**
